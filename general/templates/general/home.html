@@ -10,7 +10,7 @@
             <p>Our stories:</p>
             <ul>
                 {% for story in stories %}
-                    <li><a href="{% url 'story_detail' story.slug %}">{{ story.title }}</a></li>
+                    <li><a href="{% url 'story_detail' story.pk %}">{{ story.title }}</a></li>
                 {% endfor %}
             </ul>
         </div>
