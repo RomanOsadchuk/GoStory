@@ -1,0 +1,76 @@
+[
+  {
+    "model": "stories.story",
+    "pk": 1,
+    "fields": {
+      "title": "Awesome story no 1",
+      "slug": "awesome-story-no-1",
+      "started_at": "2014-09-19"
+    }
+  },
+  {
+    "model": "stories.chapter",
+    "pk": 1,
+    "fields": {
+      "story": 1,
+      "headline": "A long time ago in a galaxy far, far away",
+      "slug": "a-long-time-ago-in-a-galaxy-far-far-away",
+      "body": "long chapter 1 text here"
+    }
+  },
+  {
+    "model": "stories.chapter",
+    "pk": 2,
+    "fields": {
+      "story": 1,
+      "parent": 1,
+      "headline": "Petro finds smth ...",
+      "slug": "petro-finds-smth",
+      "body": "long chapter text here"
+    }
+  },
+  {
+    "model": "stories.chapter",
+    "pk": 3,
+    "fields": {
+      "story": 1,
+      "parent": 1,
+      "headline": "Petro doesn't notice smth ...",
+      "slug": "Petro-doesn-t-notice-smth",
+      "body": "long chapter text here"
+    }
+  },
+  {
+    "model": "stories.chapter",
+    "pk": 4,
+    "fields": {
+      "story": 1,
+      "parent": 2,
+      "headline": "Petro user smth for some reason ...",
+      "slug": "petro-user-smth-for-some-reason",
+      "body": "long chapter text here"
+    }
+  },
+  {
+    "model": "stories.chapter",
+    "pk": 5,
+    "fields": {
+      "story": 1,
+      "parent": 2,
+      "headline": "Petro user smth for other reason ...",
+      "slug": "petro-user-smth-for-other-reason",
+      "body": "long chapter text here"
+    }
+  },
+  {
+    "model": "stories.chapter",
+    "pk": 6,
+    "fields": {
+      "story": 1,
+      "parent": 3,
+      "headline": "Petro meets somebody ...",
+      "slug": "petro-meets-somebody",
+      "body": "long chapter text here"
+    }
+  }
+]

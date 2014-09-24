@@ -1,0 +1,21 @@
+{% load html_tag_modifiers %}
+
+<form action="{% url 'add_chapter_ajax' %}" class="add-chapter-form" method="post" role="form">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {% for field in form %}
+        {% if field.is_hidden %}
+            {{ field }}
+        {% else %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                <p class="text-danger {{ field.label|lower }}-errors">
+                    {% for e in field.errors %}{{ e }}{% endfor %}
+                </p>
+                {{ field|add_class:"form-control" }}
+            </div>
+        {% endif %}
+    {% endfor %}
+    <button class="btn btn-default">confirm</button>
+</form>
+

@@ -1,0 +1,33 @@
+{% extends 'general/base.html' %}
+
+{% load html_tag_modifiers %}
+
+{% block title %}Start new story | {{ block.super }}{% endblock %}
+
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            
+            <h2>Start new story here</h2>
+            <hr/>
+            
+            <form method="post" role="form">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                {% for field in form %}
+                    {% if not field.is_hidden %}
+                        <div class="form-group">
+                            {{ field.label_tag }}
+                            <p class="text-danger">
+                                {% for e in field.errors %}{{ e }}{% endfor %}
+                            </p>
+                            {{ field|add_class:"form-control" }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <button class="btn btn-primary">start story</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

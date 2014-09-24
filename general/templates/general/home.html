@@ -1,0 +1,18 @@
+{% extends 'general/base.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <h1>GoStory</h1>
+            <p><strong>Creating stories with polylinear plot together!</strong></p>
+            <hr/>
+            
+            <p>Our stories:</p>
+            <ul>
+                {% for story in stories %}
+                    <li><a href="{% url 'story_detail' story.slug %}">{{ story.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}

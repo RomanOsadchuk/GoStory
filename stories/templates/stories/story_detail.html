@@ -1,0 +1,23 @@
+{% extends 'general/base.html' %}
+
+{% block title %}{{ story.title }} | {{ block.super }}{% endblock %}
+
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <h3>{{ story.title }}</h3>
+            <hr/>
+            
+            <div id="story-metadata">
+                <p>Genre: #story genre#</p>
+                <p>Number of chapters: </p>
+                <p>Authors: </p>
+                <p>Started at: </p>
+                <p>etc...</p>
+            </div>
+            
+            <p><a href="{% url 'read_story' story.slug %}">start reading</a></p>
+        </div>
+    </div>
+{% endblock %}

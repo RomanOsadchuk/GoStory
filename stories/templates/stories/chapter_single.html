@@ -1,0 +1,62 @@
+<div class="chapter-single panel panel-default"
+     data-parent-pk="{{ chapter.parent.pk }}" data-chapter-pk="{{ chapter.pk }}">
+    <div class="panel-heading"><h4>{{ chapter.headline }}</h4></div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-8">
+                <p>{{ chapter.body }}</p>
+            </div>
+            <div class="col-md-4">
+                <p><strong>Chapter details</strong></p>
+                <p>Author: </p>
+                <p>likes/dislikes: </p>
+                {% if chapter.parent %}
+                    <p><em>Alternative development of events:</em></p>
+                    <ul>
+                        {% for each in neighbours %}
+                            <li><a class="chapter-link" data-chapter-type="neighbour"
+                                   href="{% url 'chapter_detail_ajax' each.pk %}">
+                                {{ each.headline }}</a></li>
+                        {% endfor %}
+                    </ul>
+                    {% if user.is_authenticated %}
+                        <p><a href="#" class="suggest-chapter">Suggest your alternative</a></p>
+                    {% else %}
+                        <p>
+                            <a href="{% url 'login' %}?next={% url 'read_story' chapter.story.slug %}?chapter-pk={{ chapter.pk }}">login</a>
+                            to suggest an alternative chapter ?chapter-pk={{ chapter.pk }}
+                        </p>
+                    {% endif %}
+                {% else %}
+                    <p><em>No alternatives to first chapter allowed. Yet =)</em></p>
+                {% endif %}
+            </div>
+        </div>
+        
+        {% if chapter.parent and user.is_authenticated %}
+            <div class="alternative-chapter-form" style="display: none">
+                <p>
+                    <strong>Suggest alternative chapter: </strong>
+                    <a href="#" class="suggest-chapter">(cancel)</a>
+                </p>
+                {% include 'stories/chapter_add_form.html' %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="chapter-children">
+    {% if children %}
+        <p><em>What comes next?:</em></p>
+        <ul>
+            {% for child in children %}
+                <li><a class="chapter-link" data-chapter-type="child"
+                       href="{% url 'chapter_detail_ajax' child.pk %}">
+                    {{ child.headline }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-center">The end.</p>
+    {% endif %}
+</div>
+
