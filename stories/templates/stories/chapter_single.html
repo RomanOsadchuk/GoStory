@@ -24,7 +24,7 @@
                     {% else %}
                         <p>
                             <a href="{% url 'login' %}?next={% url 'read_story' chapter.story.slug %}?chapter-pk={{ chapter.pk }}">login</a>
-                            to suggest an alternative chapter ?chapter-pk={{ chapter.pk }}
+                            to suggest an alternative chapter
                         </p>
                     {% endif %}
                 {% else %}
