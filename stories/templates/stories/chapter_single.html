@@ -23,7 +23,7 @@
                         <p><a href="#" class="suggest-chapter">Suggest your alternative</a></p>
                     {% else %}
                         <p>
-                            <a href="{% url 'login' %}?next={% url 'read_story' chapter.story.slug %}?chapter-pk={{ chapter.pk }}">login</a>
+                            <a href="{% url 'login' %}?next={% url 'read_story' chapter.story.pk %}?chapter-pk={{ chapter.pk }}">login</a>
                             to suggest an alternative chapter
                         </p>
                     {% endif %}

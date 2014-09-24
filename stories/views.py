@@ -23,7 +23,7 @@ class CreateStoryView(FormView):
         return super(CreateStoryView, self).form_valid(form)
     
     def get_success_url(self):
-        kwargs = {'slug': self.new_story.slug}
+        kwargs = {'pk': self.new_story.pk}
         return reverse('story_detail', kwargs=kwargs)
 
 
@@ -66,7 +66,7 @@ class ReadStoryView(ChapterDetailAjaxView):
     template_name = 'stories/story_read.html'
     
     def get_chapter(self):
-        story = get_object_or_404(Story, slug=self.kwargs['slug'])
+        story = get_object_or_404(Story, pk=self.kwargs['pk'])
         chapter_pk = self.request.GET.get('bookmark') or \
                      self.request.GET.get('chapter-pk')
         if chapter_pk:
