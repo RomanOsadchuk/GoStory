@@ -1,0 +1,20 @@
+{% extends 'general/base.html' %}
+
+{% block title %}My bookmarks | {{ block.super }}{% endblock %}
+
+
+{% block content %}
+    <h3 class="text-center">My bookmarks</h3>
+    <br/>
+
+    <ul>
+        {% for chapter in bookmarks %}
+            <li>{{ chapter.story.title }}: 
+                <a href="{% url 'read_story' chapter.story.pk %}?bookmark={{ chapter.pk }}">
+                   {{ chapter.headline }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    
+{% endblock %}
+

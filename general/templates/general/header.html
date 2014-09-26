@@ -20,6 +20,7 @@
             <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
                     <p class="navbar-text">Welcome, {{ user.username }}</p>
+                    <li><a href="{% url 'bookmarks' %}">My bookmarks</a></li>
                     <li><a href="{% url 'create_story' %}">Start new story</a></li>
                     <li><a href="{% url 'logout' %}">logout</a></li>
                 {% else %}

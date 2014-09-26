@@ -38,6 +38,7 @@ class AddChapterForm(forms.ModelForm):
         created_chapter = super(AddChapterForm, self).save(*args, **kwargs)
         if self.user and self.user.is_authenticated():
             created_chapter.author = self.user
+            created_chapter.readers.add(self.user)
             created_chapter.save()
         return created_chapter
 

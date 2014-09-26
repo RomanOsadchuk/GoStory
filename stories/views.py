@@ -1,3 +1,4 @@
+from django.db.models import Count
 from django.core.urlresolvers import reverse
 from django.http import JsonResponse
 from django.views.generic import View, DetailView, TemplateView
@@ -6,6 +7,16 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import Story, Chapter
 from .forms import CreateStoryForm, AddChapterForm
+
+
+class BookmarksView(TemplateView):
+    template_name = 'stories/bookmarks.html'
+    
+    def get_context_data(self, *args, **kwargs):
+        context = super(BookmarksView, self).get_context_data(*args, **kwargs)
+        user = self.request.user
+        context['bookmarks'] = user.bookmarks.all().order_by('story')
+        return context
 
 
 class CreateStoryView(FormView):
@@ -28,27 +39,35 @@ class CreateStoryView(FormView):
 
 
 class StoryDetailView(DetailView):
+    MAIN_AUTHORS_NUM = 5
     model = Story
-    # def get_context_data(self, *args, **kwargs):
-    #     context = super(StoryDetailView, self).get_context_data(*args, **kwargs)
-    #     return context
+    
+    def get_context_data(self, *args, **kwargs):
+        context = super(StoryDetailView, self).get_context_data(*args, **kwargs)
+        chapters = Chapter.objects.filter(story=self.object)
+        context['chapter_num'] = chapters.count()
+        context['authors'] = chapters.values('author__username').annotate(
+            chap_num=Count('id')).order_by('-chap_num')[:self.MAIN_AUTHORS_NUM]
+        return context
 
 
 class ChapterDetailAjaxView(TemplateView):
     template_name = 'stories/chapter_single.html'
     
-    def get_chapter(self):
-        chapter_pk = self.kwargs.get('pk') or self.request.GET['chapter-pk']
-        chapter = get_object_or_404(Chapter, pk=chapter_pk)
-        return chapter
+    def get_chapter_pk(self):
+        chapter_pk = self.kwargs.get('pk')
+        return chapter_pk
     
     @classmethod
-    def get_chapter_context(cls, chapter):
-        context = {'chapter': chapter}
-        context['neighbours'] = Chapter.objects.filter(parent=chapter.parent
-            ).exclude(pk=chapter.pk).only('headline')
-        context['children'] = Chapter.objects.filter(parent=chapter
-            ).only('headline')
+    def get_chapter_context(cls, chapter_pk):
+        chapter = Chapter.objects.filter(pk=chapter_pk
+            ).select_related('readers', 'bookmarkers', 'likers')[0]
+        context = {
+            'chapter': chapter,
+            'neighbours': Chapter.objects.filter(parent=chapter.parent
+                              ).exclude(pk=chapter.pk).only('headline'),
+            'children': Chapter.objects.filter(parent=chapter).only('headline'),
+        }
         if chapter.parent:
             initial = {'parent': chapter.parent}
             form = AddChapterForm(initial=initial)
@@ -57,15 +76,21 @@ class ChapterDetailAjaxView(TemplateView):
     
     def get_context_data(self, *args, **kwargs):
         context = super(ChapterDetailAjaxView, self).get_context_data(*args, **kwargs)
-        chapter = self.get_chapter()
-        context.update(self.get_chapter_context(chapter))
+        chapter_pk = self.get_chapter_pk()
+        context.update(self.get_chapter_context(chapter_pk))
+        chapter = context['chapter']
+        user = self.request.user
+        if user.is_authenticated():
+            chapter.readers.add(user)
+            context['bookmarked'] = user in chapter.bookmarkers.all()
+            context['liked'] = user in chapter.likers.all()
         return context
 
 
 class ReadStoryView(ChapterDetailAjaxView):
     template_name = 'stories/story_read.html'
     
-    def get_chapter(self):
+    def get_chapter_pk(self):
         story = get_object_or_404(Story, pk=self.kwargs['pk'])
         chapter_pk = self.request.GET.get('bookmark') or \
                      self.request.GET.get('chapter-pk')
@@ -74,7 +99,7 @@ class ReadStoryView(ChapterDetailAjaxView):
             # if chapter.story != story: 
         else:
             chapter = Chapter.objects.get(story=story, parent__isnull=True)
-        return chapter
+        return chapter.pk
 
     def get_context_data(self, *args, **kwargs):
         context = super(ReadStoryView, self).get_context_data(*args, **kwargs)
@@ -88,10 +113,28 @@ class AddChapterAjaxView(View):
         form = AddChapterForm(data=request.POST, user=request.user)
         if form.is_valid():
             chapter = form.save()
-            context = ChapterDetailAjaxView.get_chapter_context(chapter)
+            context = ChapterDetailAjaxView.get_chapter_context(chapter.pk)
             return render(request, 'stories/chapter_single.html', context)
         else:
             data = form.errors.as_json()
             response = JsonResponse(data=data, safe=False, status=400)
             return response
+
+
+class ChapterFeedbackAjaxView(View):
+    def get(self, request, *args, **kwargs):
+        chapter = get_object_or_404(Chapter, pk=kwargs['pk'])
+        feedback_type = request.GET.get('feedback_type')
+        if feedback_type == 'add-bookmark':
+            chapter.bookmarkers.add(request.user)
+        elif feedback_type == 'remove-bookmark':
+            chapter.bookmarkers.remove(request.user)
+        elif feedback_type == 'like':
+            chapter.likers.add(request.user)
+        elif feedback_type == 'cancel-like':
+            chapter.likers.remove(request.user)
+        else:
+            data = {'message': 'unknown feedback type'}
+            return JsonResponse(data=data, safe=False, status=400)
+        return JsonResponse(data={'message': 'OK'}, safe=False) 
 

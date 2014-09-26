@@ -5,6 +5,7 @@
 {% block title %}{{ chapter.story.title }} | {{ block.super }}{% endblock %}
 
 {% block js %}
+    <script src="{% static 'stories/js/chapter_feedback.js' %}" type="text/javascript"></script>
     <script src="{% static 'stories/js/reading_story.js' %}" type="text/javascript"></script>
 {% endblock %}
 

@@ -34,6 +34,7 @@ function init_story_reading(jQuery) {
                 $('#story').append(data);
             }
             init_story_reading();
+            init_chapter_feedback();
             init_common();
         }).fail(function(response){
             alert('smth wrong');
@@ -57,6 +58,7 @@ function init_story_reading(jQuery) {
             $('.chapter-children').remove();
             $('#story').append(response);
             init_story_reading();
+            init_chapter_feedback();
             init_common();
         }).fail(function(response){
             var errors = $.parseJSON(response.responseJSON);

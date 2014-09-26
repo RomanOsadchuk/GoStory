@@ -7,17 +7,17 @@ class Story(models.Model):
     MIN_TITLE_LEN = 5
     MAX_TITLE_LEN = 100
     title = models.CharField(max_length=MAX_TITLE_LEN)
-    slug = models.SlugField()
+    slug = models.SlugField(blank=True, null=True)
     started_at = models.DateField(auto_now_add=True)
     # and it never ends =)
     # likes, genre ...
     
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
-        super(Story, self).save(*args, **kwargs)
+        return super(Story, self).save(*args, **kwargs)
     
     def __unicode__(self):
-        return 'Story: {}'.format(self.title)
+        return self.title
 
 
 class Chapter(models.Model):
@@ -34,6 +34,12 @@ class Chapter(models.Model):
     body = models.CharField(max_length=MAX_BODY_LEN)
     author = models.ForeignKey(User, blank=True, null=True,
                                on_delete=models.SET_NULL)
+    added_at = models.DateTimeField(auto_now_add=True)
+    
+    readers = models.ManyToManyField(User, related_name='read_chapters')
+    likers = models.ManyToManyField(User, related_name='liked_chapters')
+    dislikers = models.ManyToManyField(User, related_name='disliked_chapters')
+    bookmarkers = models.ManyToManyField(User, related_name='bookmarks')
     # auto_now_add, likes, dislikes ...
     
     def save(self, *args, **kwargs):
@@ -41,8 +47,8 @@ class Chapter(models.Model):
         if not (hasattr(self, 'story') and self.story) and \
                 hasattr(self, 'parent') and self.parent:
             self.story = self.parent.story
-        super(Chapter, self).save(*args, **kwargs)
+        return super(Chapter, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return 'Chapter: {} ...'.format(self.headline)
+        return self.headline
 

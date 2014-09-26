@@ -10,10 +10,14 @@
             <hr/>
             
             <div id="story-metadata">
-                <p>Genre: #story genre#</p>
-                <p>Number of chapters: </p>
-                <p>Authors: </p>
-                <p>Started at: </p>
+                <p>Number of chapters: {{ chapter_num }};</p>
+                <p>Main authors: 
+                    {% for a in authors %}
+                        {{ a.author__username }}({{ a.chap_num }})
+                        {% if forloop.last %};{% else %}, {% endif %}
+                    {% endfor %}
+                </p>
+                <p>Started at: {{ story.started_at|date }}</p>
                 <p>etc...</p>
             </div>
             

@@ -6,10 +6,37 @@
             <div class="col-md-8">
                 <p>{{ chapter.body }}</p>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4" class="chapter-details">
                 <p><strong>Chapter details</strong></p>
-                <p>Author: </p>
-                <p>likes/dislikes: </p>
+                <p>Author: {{ chapter.author.username }}</p>
+                <p>Written: {{ chapter.added_at|date }}</p>
+                <p>
+                    likes: <span class="like-count">{{ chapter.likers.all.count }} </span>
+                    {% if user.is_authenticated %}
+                        {% if liked %}
+                            <a href="{% url 'chapter_feedback_ajax' chapter.pk %}"
+                               class="chapter-feedback" data-feedback-type="cancel-like">
+                            cancel</a>
+                        {% else %}
+                            <a href="{% url 'chapter_feedback_ajax' chapter.pk %}"
+                               class="chapter-feedback" data-feedback-type="like">
+                            like it!</a>
+                        {% endif %}
+                    {% endif %}
+                </p>
+                {% if user.is_authenticated %}
+                    {% if bookmarked %}
+                        <p><a href="{% url 'chapter_feedback_ajax' chapter.pk %}"
+                              class="chapter-feedback" data-feedback-type="remove-bookmark">
+                            remove bookmark</a><p>
+                    {% else %}
+                        <p><a href="{% url 'chapter_feedback_ajax' chapter.pk %}"
+                              class="chapter-feedback" data-feedback-type="add-bookmark">
+                        add bookmark</a><p>
+                    {% endif %}
+                {% endif %}
+                
+                <br/>
                 {% if chapter.parent %}
                     <p><em>Alternative development of events:</em></p>
                     <ul>
