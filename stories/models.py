@@ -13,7 +13,8 @@ class Story(models.Model):
     # likes, genre ...
     
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)
+        # TODO: cyrilic slugs
+        self.slug = slugify(self.title) or '----'
         return super(Story, self).save(*args, **kwargs)
     
     def __unicode__(self):
@@ -27,7 +28,7 @@ class Chapter(models.Model):
     MAX_BODY_LEN = 1500
     story = models.ForeignKey(Story)
     parent = models.ForeignKey('self', blank=True, null=True,
-                               on_delete=models.SET_NULL)
+                               on_delete=models.SET_NULL, related_name='children')
     
     headline = models.CharField(max_length=MAX_HEADLINE_LEN)
     slug = models.SlugField()
@@ -43,11 +44,16 @@ class Chapter(models.Model):
     # auto_now_add, likes, dislikes ...
     
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.headline)
+        # TODO: cyrilic slugs
+        self.slug = slugify(self.headline) or '----'
         if not (hasattr(self, 'story') and self.story) and \
                 hasattr(self, 'parent') and self.parent:
             self.story = self.parent.story
         return super(Chapter, self).save(*args, **kwargs)
+    
+    @property
+    def neighbours(self):
+        return Chapter.objects.filter(parent=self.parent).exclude(pk=self.pk)
 
     def __unicode__(self):
         return self.headline
