@@ -11,9 +11,9 @@ import dj_database_url
 SECRET_KEY = '$5uqofo8w&l28na8y$%%q56ri!kwdq3n=sdpwkz*ozs1amch=+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = False
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
