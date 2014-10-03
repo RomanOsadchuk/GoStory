@@ -20,12 +20,13 @@
             <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
                     <p class="navbar-text">Welcome, {{ user.username }}</p>
-                    <li><a href="{% url 'bookmarks' %}">My bookmarks</a></li>
-                    <li><a href="{% url 'create_story' %}">Start new story</a></li>
-                    <li><a href="{% url 'logout' %}">logout</a></li>
+                    <li><a href="{% url 'profile' user.username %}">My Profile</a></li>
+                    <li><a href="{% url 'bookmarks' %}">My Bookmarks</a></li>
+                    <li><a href="{% url 'create_story' %}">Start New Story</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
                 {% else %}
-                    <li><a href="{% url 'login' %}">login</a></li>
-                    <li><a href="{% url 'register' %}">register</a></li>
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'register' %}">Register</a></li>
                 {% endif %}
             </ul>
         </div>

@@ -1,12 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.conf.urls import patterns, url
 from general.decorators import ajax_only
-from .views import CreateStoryView, StoryDetailView, ReadStoryView, BookmarksView, \
+from .views import CreateStoryView, StoryListView, StoryDetailView, ReadStoryView, BookmarksView, \
     ChapterDetailAjaxView, AddChapterAjaxView, ChapterFeedbackAjaxView
 
 
 urlpatterns = patterns('',
     url(r'^start-story/$', login_required(CreateStoryView.as_view()), name='create_story'),
+    url(r'^stories/$', StoryListView.as_view(), name='story_list'),
     url(r'^story/(?P<pk>\d+)/$', StoryDetailView.as_view(), name='story_detail'),
     url(r'^story/(?P<pk>\d+)/read/$', ReadStoryView.as_view(), name='read_story'),
     url(r'^bookmarks/$', login_required(BookmarksView.as_view()), name='bookmarks'),

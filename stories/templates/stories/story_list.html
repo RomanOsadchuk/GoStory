@@ -1,0 +1,28 @@
+{% extends 'general/base.html' %}
+
+{% load staticfiles%}
+
+{% block title %}Our stories | {{ block.super }}{% endblock %}
+
+{% block js %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-4">
+            <p>filter params here</p>
+        </div>
+        <div class="col-md-8">
+            <h2>Our stories:</h2>
+            <hr/>
+                        
+            {% for story in stories %}
+                <li><a href="{% url 'story_detail' story.pk %}">{{ story.title }}</a></li>
+            {% empty%}
+                <p>no stories found =(</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+

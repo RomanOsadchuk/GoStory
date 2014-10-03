@@ -1,0 +1,39 @@
+{% extends 'general/base.html' %}
+
+{% block title %}{{ profile_user.username }} profile | {{ block.super }}{% endblock %}
+
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <h3>{{ profile_user.username }}</h3>
+            <hr/>
+            
+            <div>
+                {% if user == profile_user %}
+                    <p>
+                        <a href="{% url 'bookmarks' %}">My Bookmarks</a>, 
+                        <a href="{% url 'create_story' %}">Start New Story</a>.
+                    </p>
+                {% endif %}
+                <p>Number of read chapters: {{ read_chapters_num }};</p>
+                <p>Number of written chapters: {{ written_chapters_num}};</p>
+                <hr/>
+                <ul>
+                    <p>last written chapters:</p>
+                    {% for chapter in last_written_chapters %}
+                        <li><a href="{{ chapter.get_url }}">{{ chapter.headline }}</a></li>
+                    {% endfor %}
+                </ul>
+                <ul>
+                    <p># best written chapters: #</p>
+                    {% for chapter in last_written_chapters %}
+                        <li><a href="{{ chapter.get_url }}">{{ chapter.headline }}</a></li>
+                    {% endfor %}
+                </ul>
+                <p>etc...</p>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

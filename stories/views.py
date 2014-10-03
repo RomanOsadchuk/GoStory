@@ -95,6 +95,16 @@ class CreateStoryView(FormView):
         return reverse('story_detail', kwargs={'pk': self.new_story.pk})
 
 
+class StoryListView(TemplateView):
+    template_name = 'stories/story_list.html'
+    
+    def get_context_data(self, *args, **kwargs):
+        context = super(StoryListView, self).get_context_data(*args, **kwargs)
+        params = self.request.GET.dict()
+        context['stories'] = StoryService.get_story_list(**params)
+        return context
+
+
 class StoryDetailView(DetailView):
     model = Story
     

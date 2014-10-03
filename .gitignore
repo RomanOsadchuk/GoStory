@@ -4,3 +4,6 @@ venv
 staticfiles
 db.sqlite3
 
+gostory/settings.py
+Procfile
+

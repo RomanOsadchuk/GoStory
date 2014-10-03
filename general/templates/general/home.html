@@ -7,12 +7,38 @@
             <p><strong>Creating stories with polylinear plot together!</strong></p>
             <hr/>
             
-            <p>Our stories:</p>
+            <h2>Recent stories:</h2>
             <ul>
                 {% for story in stories %}
                     <li><a href="{% url 'story_detail' story.pk %}">{{ story.title }}</a></li>
                 {% endfor %}
             </ul>
+            <hr/>
+            
+            <h2>Best stories:</h2>
+            <ul>
+                {% for story in stories %}
+                    <li><a href="{% url 'story_detail' story.pk %}">{{ story.title }}</a></li>
+                {% endfor %}
+            </ul>
+            <hr/>
+            
+            <h2>Interesting authors:</h2>
+            <ul>
+                {% for story in stories %}
+                    <li><a href="{% url 'story_detail' story.pk %}">{{ story.title }}</a></li>
+                {% endfor %}
+            </ul>
+            <hr/>
+            
+            {% if user.is_authenticated %}
+                <h2>Unread chapters from stories you like:</h2>
+                <ul>
+                    {% for story in stories %}
+                        <li><a href="{% url 'story_detail' story.pk %}">{{ story.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

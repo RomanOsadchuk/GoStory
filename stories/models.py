@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.utils.text import slugify
 
 
@@ -54,6 +55,11 @@ class Chapter(models.Model):
     @property
     def neighbours(self):
         return Chapter.objects.filter(parent=self.parent).exclude(pk=self.pk)
+    
+    def get_url(self):
+        start = reverse('read_story', kwargs={'pk': self.story.pk})
+        end = '?chapter-pk={}'.format(self.pk)
+        return start + end
 
     def __unicode__(self):
         return self.headline

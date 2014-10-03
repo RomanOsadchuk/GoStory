@@ -1,7 +1,10 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
+from django.shortcuts import get_object_or_404
+from stories.models import Chapter
 
 
 class RegistrationView(FormView):
@@ -16,4 +19,21 @@ class RegistrationView(FormView):
         new_user = authenticate(username=name, password=password)
         login(self.request, new_user)
         return super(RegistrationView, self).form_valid(form)
+
+
+class ProfileView(TemplateView):
+    CHAPTERS_NUMBER = 4
+    template_name = 'registration/profile.html'
+    
+    def get_context_data(self, *args, **kwargs):
+        context = super(ProfileView, self).get_context_data(*args, **kwargs)
+        prof_user = get_object_or_404(User, username=kwargs['username'])
+        context = {
+            'profile_user': prof_user,
+            'written_chapters_num': prof_user.chapter_set.all().count(),
+            'read_chapters_num': prof_user.read_chapters.all().count(),
+            'last_written_chapters': Chapter.objects.filter(author=prof_user
+                ).order_by('-added_at')[:self.CHAPTERS_NUMBER],
+        }
+        return context
 

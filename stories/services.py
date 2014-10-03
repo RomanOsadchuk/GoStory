@@ -8,6 +8,16 @@ class StoryService(object):
     AUTHORS_NUM = 5
     
     @classmethod
+    def get_story_list(cls, title=None, ordering=None, limit=None,
+            **ignore_other_params):
+        stories = Story.objects.all()
+        if title:
+            stories = stories.filter(title__icontains=title)
+        if limit:
+            stories = stories[:limit]
+        return stories
+    
+    @classmethod
     def get_detail_context(cls, story):
         chapters = Chapter.objects.filter(story=story)
         context = {

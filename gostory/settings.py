@@ -11,15 +11,15 @@ import dj_database_url
 SECRET_KEY = '$5uqofo8w&l28na8y$%%q56ri!kwdq3n=sdpwkz*ozs1amch=+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-TEMPLATE_DEBUG = False
+TEMPLATE_DEBUG = True
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 ALLOWED_HOSTS = ['*']
 
-DATABASES['default'] =  dj_database_url.config()
+# DATABASES['default'] =  dj_database_url.config()
 
 STATIC_ROOT = 'staticfiles'
 
