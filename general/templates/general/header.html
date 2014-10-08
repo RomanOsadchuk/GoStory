@@ -12,17 +12,19 @@
         </div>
         
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <!--<ul class="nav navbar-nav">-->
-            <!--    <li><a href="#">best stories</a></li>-->
-            <!--    <li><a href="#">best stories</a></li>-->
-            <!--</ul>-->
+            <ul class="nav navbar-nav">
+                <li><a href="{% url 'story_list' %}">Stories</a></li>
+                <li><a href="{% url 'story_list' %}">Authors</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'create_story' %}">Start New Story</a></li>
+                {% endif %}
+            </ul>
             
             <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
                     <p class="navbar-text">Welcome, {{ user.username }}</p>
                     <li><a href="{% url 'profile' user.username %}">My Profile</a></li>
                     <li><a href="{% url 'bookmarks' %}">My Bookmarks</a></li>
-                    <li><a href="{% url 'create_story' %}">Start New Story</a></li>
                     <li><a href="{% url 'logout' %}">Logout</a></li>
                 {% else %}
                     <li><a href="{% url 'login' %}">Login</a></li>

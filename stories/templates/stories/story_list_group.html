@@ -1,0 +1,15 @@
+<ul class="list-group">
+    {% for story in stories %}
+        <li class="list-group-item">
+            <h4 class="list-group-item-heading">
+                <a href="{% url 'story_detail' story.pk %}">{{ story.title }}</a>
+            </h4>
+            <p class="list-group-item-text">
+                Started {{ story.started_at|date }} (some other data)
+            </p>
+        </li>
+    {% empty %}
+        <p>No stories found</p>
+    {% endfor %}
+</ul>
+

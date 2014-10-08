@@ -1,0 +1,15 @@
+<ul class="list-group">
+    {% for author in authors %}
+        <li class="list-group-item">
+            <h4 class="list-group-item-heading">
+                <a href="{% url 'profile' author.username %}">{{ author.username }}</a>
+            </h4>
+            <p class="list-group-item-text">
+                Writed {{ author.chap_num }} chapters (more data)
+            </p>
+        </li>
+    {% empty %}
+        <p>No authors found</p>
+    {% endfor %}
+</ul>
+

@@ -20,14 +20,14 @@
                 <p>Number of written chapters: {{ written_chapters_num}};</p>
                 <hr/>
                 <ul>
-                    <p>last written chapters:</p>
+                    <p>Last written chapters:</p>
                     {% for chapter in last_written_chapters %}
                         <li><a href="{{ chapter.get_url }}">{{ chapter.headline }}</a></li>
                     {% endfor %}
                 </ul>
                 <ul>
-                    <p># best written chapters: #</p>
-                    {% for chapter in last_written_chapters %}
+                    <p>Best written chapters:</p>
+                    {% for chapter in best_written_chapters %}
                         <li><a href="{{ chapter.get_url }}">{{ chapter.headline }}</a></li>
                     {% endfor %}
                 </ul>

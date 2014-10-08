@@ -4,6 +4,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 from django.shortcuts import get_object_or_404
+
+from django.db.models import Count
 from stories.models import Chapter
 
 
@@ -28,12 +30,14 @@ class ProfileView(TemplateView):
     def get_context_data(self, *args, **kwargs):
         context = super(ProfileView, self).get_context_data(*args, **kwargs)
         prof_user = get_object_or_404(User, username=kwargs['username'])
+        chapters = Chapter.objects.filter(author=prof_user)
+        chapters = chapters.annotate(likes_num=Count('likers'))
         context = {
             'profile_user': prof_user,
             'written_chapters_num': prof_user.chapter_set.all().count(),
             'read_chapters_num': prof_user.read_chapters.all().count(),
-            'last_written_chapters': Chapter.objects.filter(author=prof_user
-                ).order_by('-added_at')[:self.CHAPTERS_NUMBER],
+            'last_written_chapters': chapters.order_by('-added_at')[:self.CHAPTERS_NUMBER],
+            'best_written_chapters': chapters.order_by('-likes_num')[:self.CHAPTERS_NUMBER],
         }
         return context
 

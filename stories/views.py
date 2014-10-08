@@ -4,9 +4,10 @@ from django.views.generic import View, DetailView, TemplateView
 from django.views.generic.edit import FormView
 from django.shortcuts import render, redirect, get_object_or_404
 
+from general.mixins import PaginationMixin
 from .models import Story, Chapter
 from .forms import CreateStoryForm, AddChapterForm
-from .services import StoryService, ChapterService
+from .services import StoryService, ChapterService, AuthorService
 
 
 class BookmarksView(TemplateView):
@@ -16,6 +17,21 @@ class BookmarksView(TemplateView):
         ctx = super(BookmarksView, self).get_context_data(*args, **kwargs)
         ctx['bookmarks'] = self.request.user.bookmarks.all().order_by('story')
         return ctx
+
+
+class AuthorListAjaxView(TemplateView, PaginationMixin):
+    template_name = 'stories/author_list_ajax.html'
+    
+    def get_context_data(self, *args, **kwargs):
+        context = super(AuthorListAjaxView, self).get_context_data(*args, **kwargs)
+        params = self.request.GET.dict()
+        authors = AuthorService.get_author_list(**params)
+        context['authors'] = self.paginate(authors)
+        return context
+
+
+class AuthorListView(AuthorListAjaxView):
+    template_name = 'stories/author_list_page.html'
 
 
 # ==== CHAPTER VIEWS ==== #
@@ -95,14 +111,19 @@ class CreateStoryView(FormView):
         return reverse('story_detail', kwargs={'pk': self.new_story.pk})
 
 
-class StoryListView(TemplateView):
-    template_name = 'stories/story_list.html'
+class StoryListAjaxView(TemplateView, PaginationMixin):
+    template_name = 'stories/story_list_ajax.html'
     
     def get_context_data(self, *args, **kwargs):
-        context = super(StoryListView, self).get_context_data(*args, **kwargs)
+        context = super(StoryListAjaxView, self).get_context_data(*args, **kwargs)
         params = self.request.GET.dict()
-        context['stories'] = StoryService.get_story_list(**params)
+        stories = StoryService.get_story_list(**params)
+        context['stories'] = self.paginate(stories)
         return context
+
+
+class StoryListView(StoryListAjaxView):
+    template_name = 'stories/story_list_page.html'
 
 
 class StoryDetailView(DetailView):
@@ -132,7 +153,6 @@ class ReadStoryView(ChapterDetailAjaxView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(ReadStoryView, self).get_context_data(*args, **kwargs)
-        # form = AddChapterForm(initial={'parent': context['chapter']})
         context['continuation_form'] = AddChapterForm()
         return context
 

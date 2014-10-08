@@ -1,10 +1,18 @@
 from json import JSONEncoder
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db.models import Count
 from .models import Story, Chapter
 
 
 class StoryService(object):
+    ORDER_RECENT = 'recent'
+    ORDER_OLD = 'old'
+    ORDERINGS = {
+        ORDER_RECENT: '-started_at',
+        ORDER_OLD: 'started_at',
+    }
+    DEFAULT_ORDERING = '-started_at'
     AUTHORS_NUM = 5
     
     @classmethod
@@ -13,9 +21,20 @@ class StoryService(object):
         stories = Story.objects.all()
         if title:
             stories = stories.filter(title__icontains=title)
+        order = cls.ORDERINGS.get(ordering, cls.DEFAULT_ORDERING)
+        stories = stories.order_by(order)
         if limit:
             stories = stories[:limit]
         return stories
+    
+    @classmethod
+    def get_recent(cls, limit):
+        return cls.get_story_list(ordering=cls.ORDER_RECENT, limit=limit)
+    
+    @classmethod
+    def get_interesting(cls, limit):
+        # TODO: make it realy interesting
+        return cls.get_story_list(ordering=cls.ORDER_OLD, limit=limit)
     
     @classmethod
     def get_detail_context(cls, story):
@@ -71,4 +90,31 @@ class ChapterService(object):
         else:
             return False, {'message': 'unknown or no feedback type'}
         return True, {'message': 'OK'}
+
+
+class AuthorService(object):
+    ORDER_NAME = 'username'
+    ORDER_CHAP_NUM = 'chapters_number'
+    ORDERINGS = {
+        ORDER_NAME: 'username',
+        ORDER_CHAP_NUM: '-chap_num',
+    }
+    DEFAULT_ORDERING = 'username'
+    
+    @classmethod
+    def get_author_list(cls, name=None, ordering=None, limit=None,
+            **ignore_other_params):
+        authors = User.objects.annotate(chap_num=Count('chapter'))
+        authors = authors.filter(is_staff=False, chap_num__gt=0)
+        if name:
+            authors = authors.filter(username__icontains=name)
+        order = cls.ORDERINGS.get(ordering, cls.DEFAULT_ORDERING)
+        authors = authors.order_by(order)
+        if limit:
+            authors = authors[:limit]
+        return authors
+    
+    @classmethod
+    def get_most_writable(cls, limit):
+        return cls.get_author_list(ordering=cls.ORDER_CHAP_NUM, limit=limit)
 

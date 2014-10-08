@@ -1,5 +1,6 @@
 {% extends 'general/base.html' %}
 
+
 {% block content %}
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -8,37 +9,13 @@
             <hr/>
             
             <h2>Recent stories:</h2>
-            <ul>
-                {% for story in stories %}
-                    <li><a href="{% url 'story_detail' story.pk %}">{{ story.title }}</a></li>
-                {% endfor %}
-            </ul>
-            <hr/>
+            {% include 'stories/story_list_group.html' with stories=recent_stories %}
             
-            <h2>Best stories:</h2>
-            <ul>
-                {% for story in stories %}
-                    <li><a href="{% url 'story_detail' story.pk %}">{{ story.title }}</a></li>
-                {% endfor %}
-            </ul>
-            <hr/>
+            <h2># Best stories: #</h2>
+            {% include 'stories/story_list_group.html' with stories=interesting_stories %}
             
-            <h2>Interesting authors:</h2>
-            <ul>
-                {% for story in stories %}
-                    <li><a href="{% url 'story_detail' story.pk %}">{{ story.title }}</a></li>
-                {% endfor %}
-            </ul>
-            <hr/>
-            
-            {% if user.is_authenticated %}
-                <h2>Unread chapters from stories you like:</h2>
-                <ul>
-                    {% for story in stories %}
-                        <li><a href="{% url 'story_detail' story.pk %}">{{ story.title }}</a></li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
+            <h2>Best writers:</h2>
+            {% include 'stories/author_list_group.html' with authors=best_writers %}
         </div>
     </div>
 {% endblock %}

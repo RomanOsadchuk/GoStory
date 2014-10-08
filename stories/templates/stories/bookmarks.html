@@ -13,6 +13,8 @@
                 <a href="{% url 'read_story' chapter.story.pk %}?bookmark={{ chapter.pk }}">
                    {{ chapter.headline }}</a>
             </li>
+        {% empty %}
+            <p>You have no bookmarks.</p>
         {% endfor %}
     </ul>
     
