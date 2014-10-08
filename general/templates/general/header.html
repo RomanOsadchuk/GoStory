@@ -14,7 +14,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li><a href="{% url 'story_list' %}">Stories</a></li>
-                <li><a href="{% url 'story_list' %}">Authors</a></li>
+                <li><a href="{% url 'author_list' %}">Authors</a></li>
                 {% if user.is_authenticated %}
                     <li><a href="{% url 'create_story' %}">Start New Story</a></li>
                 {% endif %}
