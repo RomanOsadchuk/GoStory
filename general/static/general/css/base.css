@@ -1,0 +1,14 @@
+
+form#filtering {
+    padding-top: 30px;
+}
+
+.form-horizontal .errorlist {
+    list-style-type: none;
+    margin: 25px 0;
+}
+
+.form-horizontal .errors p {
+    margin: 0px;
+    padding-top: 7px;
+}

@@ -1,3 +1,6 @@
+{# distinct template because it is included in home page and story_list_ajax page #}
+
+
 <ul class="list-group">
     {% for story in stories %}
         <li class="list-group-item">
@@ -8,8 +11,5 @@
                 Started {{ story.started_at|date }} (some other data)
             </p>
         </li>
-    {% empty %}
-        <p>No stories found</p>
     {% endfor %}
 </ul>
-

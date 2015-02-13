@@ -1,4 +1,10 @@
+<h2 class="text-center">
+    {% with total=stories.paginator.count %}
+        {% if total %} Found {{ total }} stor{{ total|pluralize:"y,ies" }}:
+        {% else %}No authors found{% endif %}
+    {% endwith %}
+</h2>
+
 {% include 'stories/story_list_group.html' %}
 
 {% include 'general/paginator.html' with page=stories %}
-

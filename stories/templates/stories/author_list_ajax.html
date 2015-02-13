@@ -1,18 +1,10 @@
+<h2 class="text-center">
+    {% with total=authors.paginator.count %}
+        {% if total %} Found {{ total }} author{{ total|pluralize }}:
+        {% else %}No authors found{% endif %}
+    {% endwith %}
+</h2>
+
 {% include 'stories/author_list_group.html' %}
 
 {% include 'general/paginator.html' with page=authors %}
-
-{% if stories.has_other_pages %}
-    <ul class="pager">
-        <li {% if stories.has_previous %}
-                data-page-num="{{ stories.previous_page_number }}"
-            {% else %}class="disabled"{% endif %}>
-            <a href="#">Previous page</a>
-        </li>
-        <li {% if stories.has_next %}
-                data-page-num="{{ stories.next_page_number }}"
-            {% else %}class="disabled"{% endif %}>
-            <a href="#">Next page</a>
-        </li>
-    </ul>
-{% endif %}

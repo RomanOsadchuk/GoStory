@@ -1,3 +1,6 @@
+{# distinct template because it is included in home page and author_list_ajax page #}
+
+
 <ul class="list-group">
     {% for author in authors %}
         <li class="list-group-item">
@@ -8,8 +11,6 @@
                 Writed {{ author.chap_num }} chapters (more data)
             </p>
         </li>
-    {% empty %}
-        <p>No authors found</p>
     {% endfor %}
 </ul>
 
